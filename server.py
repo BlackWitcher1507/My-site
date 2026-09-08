@@ -121,5 +121,7 @@ def view_data():
     return html
 
 if __name__ == '__main__':
-    print("🚀 الخادم يعمل على المنفذ 8080...")
-    app.run(host='0.0.0.0', port=8080, debug=False)
+    # التعديل المطلوب لـ Railway: استخدام المنفذ من متغير البيئة PORT
+    port = int(os.environ.get('PORT', 8080))
+    print(f"🚀 الخادم يعمل على المنفذ {port}...")
+    app.run(host='0.0.0.0', port=port, debug=False)
